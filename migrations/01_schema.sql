@@ -5,39 +5,39 @@ CREATE TABLE users
   email VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL
 );
-create table reservations
+create table properties
 (
   id SERIAL PRIMARY KEY,
-  start_date TIMESTAMP NOT NULL,
-  end_date TIMESTAMP NOT NULL,
-  property_id INTEGER NOT NULL REFERENCES properties(id),
-  guest_id INTEGER NOT NULL REFERENCES users(id),
-);
-create table reservations
-(
-  id SERIAL PRIMARY KEY,
-  owner_id INTEGER NOT NULL REFERENCES users(id),
+  owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   title VARCHAR (255) NOT NULL,
   description text,
   thumbnail_photo_url VARCHAR(255) NOT NULL,
   cover_photo_url VARCHAR(255) NOT NULL,
-  cost_per_night INTEGER NOT NULL,
-  parking_spaces INTEGER,
-  number_of_bathrooms INTEGER NOT NULL,
-  number_of_bedrooms INTEGER NOT NULL,
+  cost_per_night INTEGER NOT NULL DEFAULT 0,
+  parking_spaces INTEGER NOT NULL DEFAULT 0,
+  number_of_bathrooms INTEGER NOT NULL DEFAULT 0,
+  number_of_bedrooms INTEGER NOT NULL DEFAULT 0,
   country VARCHAR (255) NOT NULL,
   street VARCHAR (255) NOT NULL,
   city VARCHAR (255) NOT NULL,
   province VARCHAR (255) NOT NULL,
   post_code VARCHAR (255) NOT NULL,
-  active boolean
+  active boolean NOT NULL DEFAULT TRUE
+);
+create table reservations
+(
+  id SERIAL PRIMARY KEY,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+  guest_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
 create table property_reviews
 (
   id SERIAL PRIMARY KEY,
-  guest_id INTEGER NOT NULL REFERENCES users(id),
-  property_id INTEGER NOT NULL REFERENCES properties(id),
-  reservation_id INTEGER NOT NULL REFERENCES reservations(id),
-  reting SMALLINT NOT NULL,
+  guest_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+  reservation_id INTEGER NOT NULL REFERENCES reservations(id) ON DELETE CASCADE,
+  rating SMALLINT NOT NULL DEFAULT 0,
   message TEXT
 );
